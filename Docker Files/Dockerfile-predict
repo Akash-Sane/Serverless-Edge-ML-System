@@ -1,0 +1,26 @@
+# Use an official Python runtime as a base image
+FROM python:3.11-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . .
+
+# Copy the credentials file into the Docker image
+COPY serverless-ml-implementations-2bc22b7d6eb2.json /credentials.json
+
+# Set the environment variable to the path of the credentials file inside the container
+ENV GOOGLE_APPLICATION_CREDENTIALS=/credentials.json
+
+# Make port 5004 available to the world outside this container
+EXPOSE 5005
+
+# Define environment variable
+ENV NAME ModelWorld
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Run predict.py when the container launches
+CMD ["python", "./predict.py"]

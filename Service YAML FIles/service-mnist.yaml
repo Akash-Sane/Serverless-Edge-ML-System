@@ -1,0 +1,30 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: preprocess-and-train-mnist
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/metric: "concurrency"
+        autoscaling.knative.dev/target: "200"
+    spec:
+      containers:
+      - image: akashsane18/project-repo:preprocess-and-train-mnist
+        ports:
+        - containerPort: 80
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/secrets/google/key.json
+        readinessProbe:
+          httpGet:
+            path: /health
+        volumeMounts:
+        - mountPath: /var/secrets/google
+          name: google-credentials-volume
+          readOnly: true
+      volumes:
+      - name: google-credentials-volume
+        secret:
+          secretName: google-credentials

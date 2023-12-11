@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: k6-load-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: k6
+        image: loadimpact/k6
+        command: ["k6", "run", "--out", "influxdb=http://influxdb.monitoring.svc.cluster.local:8086/myk6db", "/scripts/loadtest.js"]
+        volumeMounts:
+        - name: script-volume
+          mountPath: /scripts
+      volumes:
+      - name: script-volume
+        configMap:
+          name: loadtest-script
+      restartPolicy: Never
+  backoffLimit: 4

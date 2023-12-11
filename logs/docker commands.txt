@@ -1,0 +1,12 @@
+docker build -t your-registry/your-k6-image:tag .
+docker push your-registry/your-k6-image:tag
+
+
+kubectl port-forward svc/your-service-name 8080:80 -n your-namespace
+
+kubectl exec -it tmp-shell -- sh
+
+wget -qO- http://preprocess-and-train-mnist.default.172.18.1.101.sslip.io/health
+
+
+kubectl port-forward deploy/my-prometheus-server 9090
